@@ -7,8 +7,8 @@ public final class LocationManager: NSObject {
     private let manager: CLLocationManager = CLLocationManager()
     private let location: PassthroughSubject<CLLocation, LocationError>
     private let heading: PassthroughSubject<CLHeading, LocationError>
-    var locationPublisher: AnyPublisher<CLLocation, LocationError>
-    var headerPublisher: AnyPublisher<CLHeading, LocationError>
+    public var locationPublisher: AnyPublisher<CLLocation, LocationError>
+    public var headerPublisher: AnyPublisher<CLHeading, LocationError>
     
     public override init() {
         location = PassthroughSubject<CLLocation, LocationError>()
