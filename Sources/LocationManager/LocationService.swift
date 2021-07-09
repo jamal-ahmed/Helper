@@ -1,4 +1,4 @@
 public protocol LocationService {
-    public func enableService()
-    public func disableService()
+    func enableService()
+    func disableService()
 }
