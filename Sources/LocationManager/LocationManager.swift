@@ -1,17 +1,18 @@
 import CoreLocation
 import Combine
 
+@available(macOS 10.15, *)
 public final class LocationManager: NSObject {
-    private let manager: CLLocationManager
+    private let manager: CLLocationManager = CLLocationManager()
     private let location: PassthroughSubject<CLLocation, LocationError>
     private let heading: PassthroughSubject<CLHeading, LocationError>
     var locationPublisher: AnyPublisher<CLLocation, LocationError>
     var headerPublisher: AnyPublisher<CLHeading, LocationError>
     
-    init() {
+    public override init() {
         location = PassthroughSubject<CLLocation, LocationError>()
         locationPublisher = location.eraseToAnyPublisher()
-        header = PassthroughSubject<CLHeading, LocationError>()
+        heading = PassthroughSubject<CLHeading, LocationError>()
         headerPublisher = heading.eraseToAnyPublisher()
         super.init()
         manager.delegate = self
@@ -19,32 +20,34 @@ public final class LocationManager: NSObject {
 }
 
 // MARK: - Location Service
-public extension LocationManager: LocationService {
-    func enableService() {
+@available(macOS 10.15, *)
+extension LocationManager: LocationService {
+    public func enableService() {
         manager.startUpdatingLocation()
     }
-    func disableService() {
+    public func disableService() {
         manager.stopUpdatingLocation()
     }
 }
 
 // MARK: - CLLocation Delegate
-private extension LocationManager: CLLocationManagerDelegate {
+@available(macOS 10.15, *)
+extension LocationManager: CLLocationManagerDelegate {
     
-    func locationManager(_ manager: CLLocationManager, didUpdateHeading heading: CLHeading) {
+    public func locationManager(_ manager: CLLocationManager, didUpdateHeading heading: CLHeading) {
         self.heading.send(heading)
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.sorted(by: { $0.timestamp > $1.timestamp}).first else { return }
         self.location.send(location)
     }
     
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         self.location.send(completion: .failure(.other(error: error)))
     }
     
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
         case .restricted, .denied:
             location.send(completion: .failure(.notAuthorized))
