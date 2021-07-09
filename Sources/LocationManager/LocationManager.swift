@@ -1,6 +1,7 @@
 import CoreLocation
 import Combine
 
+@available(iOS 13.0, *)
 @available(macOS 10.15, *)
 public final class LocationManager: NSObject {
     private let manager: CLLocationManager = CLLocationManager()
@@ -20,6 +21,7 @@ public final class LocationManager: NSObject {
 }
 
 // MARK: - Location Service
+@available(iOS 13.0, *)
 @available(macOS 10.15, *)
 extension LocationManager: LocationService {
     public func enableService() {
@@ -31,6 +33,7 @@ extension LocationManager: LocationService {
 }
 
 // MARK: - CLLocation Delegate
+@available(iOS 13.0, *)
 @available(macOS 10.15, *)
 extension LocationManager: CLLocationManagerDelegate {
     
